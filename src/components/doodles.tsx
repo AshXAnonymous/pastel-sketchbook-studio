@@ -110,7 +110,7 @@ export function PokeDoodle({
       <motion.button
         type="button"
         aria-label="a little doodle"
-        animate={float ? { y: [0, -8, 0], rotate: [0, 4, 0] } : undefined}
+        animate={float ? { y: [0, -8, 0], rotate: [0, 4, 0] } : {}}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         whileHover={{ scale: 1.2, rotate: 12 }}
         whileTap={{ scale: 0.85, rotate: 360 }}
