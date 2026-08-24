@@ -1,24 +1,53 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Intro } from "@/components/intro";
+import { Nav } from "@/components/nav";
+import { Hero } from "@/components/hero";
+import { About } from "@/components/about";
+import { Work } from "@/components/work";
+import { Services } from "@/components/services";
+import { Contact, Footer } from "@/components/contact";
+import { MoodSwitcher, ComplimentButton, BackToTop, CuteCursor } from "@/components/fun";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+const title = "Ansh Verma — Creative Developer & Digital Builder";
+const description =
+  "A handmade pastel scrapbook portfolio: playful projects, creative frontend work, and friendly digital experiences by Ansh Verma.";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [introDone, setIntroDone] = useState(false);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background text-ink">
+      <Intro onDone={() => setIntroDone(true)} />
+      <CuteCursor />
+      <Nav />
+      <MoodSwitcher />
+      <main>
+        <Hero />
+        <About />
+        <Work />
+        <Services />
+        <Contact />
+      </main>
+      <Footer />
+      {introDone && (
+        <>
+          <ComplimentButton />
+          <BackToTop />
+        </>
+      )}
     </div>
   );
 }
