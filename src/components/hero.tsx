@@ -71,7 +71,7 @@ export function Hero() {
             className="h-[300px] w-[260px] rounded-xl bg-lilac/60 object-cover sm:h-[360px] sm:w-[300px]"
           />
           <span className="absolute bottom-4 left-1/2 -translate-x-1/2 font-marker text-xl text-ink">
-            that&apos;s me! ✿
+            that&apos;s me!✿
           </span>
           <span className="absolute -bottom-5 -right-5 text-ink/50">
             <Flower className="h-12 w-12 animate-floaty" />
