@@ -1,8 +1,24 @@
 # Ansh's Creative Canvas
 
-Lovable Prompt — Cute Soft Pastel Portfolio Website for Ansh Verma
+Ansh Verma’s creative developer portfolio, built with TanStack Start, React, and Tailwind CSS.
 
-Build a cute, creative, playful, interactive, and fully functional personal portfolio website for Ansh Verma.
+## Local development
+
+Use Node.js 22.12 or later with npm. From the repository root, install the locked dependencies and start the development server.
+
+```sh
+npm ci
+npm run dev
+```
+
+Open `http://localhost:8080`. To preview the Cloudflare production build locally, start it with Wrangler.
+
+```sh
+npm run build
+npm exec --yes --package=wrangler -- wrangler dev --config .output/server/wrangler.json
+```
+
+## Design brief
 
 This website should have a completely different personality from a typical dark professional portfolio. The visual style should feel like a beautiful handmade digital scrapbook, pastel notebook, and hand-drawn crayon illustration brought to life.
 
@@ -1022,27 +1038,4 @@ The website should feel unique and personal, not like a generic pastel template.
 
 Make the user smile while exploring it—but never sacrifice usability or legibility for visual effects.
 
-Use demo information throughout because I, Ansh Verma, will replace the personal details, image, experience, projects, services, and social links later. complete the project in minimum credits
-
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://pastel-sketchbook-studio.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/3065bdcb-2263-4e58-bfda-8e94e5fc1617).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+Use demo information throughout because I, Ansh Verma, will replace the personal details, image, experience, projects, services, and social links later.
