@@ -6,7 +6,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 
 export default defineConfig(
-  { ignores: ["dist", ".output", ".vinxi", "src/routeTree.gen.ts"] },
+  { ignores: ["dist", ".output", ".vercel", ".vinxi", "src/routeTree.gen.ts"] },
   {
     extends: [js.configs.recommended],
     files: ["**/*.{js,jsx}"],

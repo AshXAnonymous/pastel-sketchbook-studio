@@ -30,7 +30,8 @@ export default defineConfig(({ command, isPreview, mode }) => ({
         client: { files: ["**/server/**"], specifiers: ["server-only"] },
       },
     }),
-    (command === "build" || isPreview) && nitro({ defaultPreset: "cloudflare-module" }),
+    (command === "build" || isPreview) &&
+      nitro({ defaultPreset: mode === "development" ? "cloudflare-module" : "vercel" }),
     react(),
   ],
   css: { transformer: "lightningcss" },

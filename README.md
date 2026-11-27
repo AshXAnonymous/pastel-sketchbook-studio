@@ -11,12 +11,16 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:8080`. To preview the Cloudflare production build locally, start it with Wrangler.
+Open `http://localhost:8080`. `npm run build` produces the Vercel build in `.vercel/output`.
+
+To preview a Cloudflare build locally, select the Cloudflare preset and start it with Wrangler.
 
 ```sh
-npm run build
+NITRO_PRESET=cloudflare-module npm run build
 npm exec --yes --package=wrangler -- wrangler dev --config .output/server/wrangler.json
 ```
+
+In PowerShell, set `$env:NITRO_PRESET = "cloudflare-module"` before `npm run build` and clear it with `Remove-Item Env:NITRO_PRESET` afterward.
 
 ## Design brief
 
