@@ -7,7 +7,7 @@ const CLICK_DURATION = 240;
 const faces = {
   default: DEFAULT_FACE,
   happy: "/cursor/shinchan-happy.webp",
-  surprised: "/cursor/surprised.webp",
+  surprised: "/cursor/shinchan-surprised.webp",
   curious: "/cursor/shinchan-curious.webp",
 };
 
