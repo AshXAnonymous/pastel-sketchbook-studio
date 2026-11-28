@@ -1,4 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
+import ShinchanCursor from "../components/ShinchanCursor";
 import {
   Outlet,
   Link,
@@ -109,6 +110,7 @@ function RootShell({ children }) {
       </head>
       <body>
         {children}
+         <ShinchanCursor />
         <Scripts />
       </body>
     </html>

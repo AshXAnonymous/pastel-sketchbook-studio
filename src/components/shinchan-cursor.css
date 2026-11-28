@@ -1,0 +1,102 @@
+.shinchan-cursor {
+  --face-width: 45px;
+  --face-height: calc(var(--face-width) * 0.75);
+  --hover-scale: 1.2;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  visibility: hidden;
+  width: var(--face-width);
+  isolation: isolate;
+  transform: translate3d(
+    clamp(
+      0px,
+      calc(var(--pointer-x, 0px) - var(--face-width) / 2),
+      calc(100vw - var(--face-width) * var(--hover-scale) - 16px)
+    ),
+    clamp(
+      0px,
+      calc(var(--pointer-y, 0px) - var(--face-height) / 2),
+      calc(100vh - var(--face-height) * var(--hover-scale))
+    ),
+    0
+  );
+}
+
+@media (any-hover: hover) and (any-pointer: fine) {
+  html:has(.shinchan-cursor[data-visible="true"]),
+  html:has(.shinchan-cursor[data-visible="true"]) * {
+    cursor: none;
+  }
+}
+
+.shinchan-cursor[data-visible="true"] {
+  visibility: visible;
+}
+
+.shinchan-cursor img {
+  display: block;
+  width: 100%;
+  height: var(--face-height);
+  object-fit: contain;
+  border-radius: 22%;
+  filter: drop-shadow(0 2px 3px rgb(42 25 52 / 25%));
+  transform-origin: top left;
+  transition: scale 120ms ease-out;
+}
+
+.shinchan-cursor[data-expression="sad"] img {
+  scale: .92;
+}
+
+.shinchan-cursor[data-hovered="true"] img {
+  scale: var(--hover-scale);
+}
+
+.shinchan-cursor[data-expression="surprised"] img {
+  object-fit: cover;
+}
+
+.shinchan-cursor[data-pressed="true"] img {
+  animation: shinchan-pop 240ms ease-out;
+}
+
+.shinchan-cursor__reaction {
+  position: absolute;
+  top: -5px;
+  left: calc(100% + 4px);
+  color: #5e367b;
+  font: 800 13px/1 system-ui, sans-serif;
+  text-shadow: 0 1px 2px white;
+}
+
+[data-expression="happy"] .shinchan-cursor__reaction::before { content: "✦"; }
+[data-expression="surprised"] .shinchan-cursor__reaction::before { content: "!"; }
+[data-expression="curious"] .shinchan-cursor__reaction::before { content: "?"; }
+[data-expression="mischievous"] .shinchan-cursor__reaction::before { content: "✧"; }
+[data-expression="sad"] .shinchan-cursor__reaction::before { content: "…"; }
+
+.shinchan-cursor[data-custom-face="true"] .shinchan-cursor__reaction {
+  display: none;
+}
+
+@keyframes shinchan-pop {
+  0%, 100% { transform: translateY(0); }
+  48%      { transform: translateY(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shinchan-cursor img {
+    animation: none !important;
+    transition: none;
+  }
+}
+
+@media (not (any-hover: hover)) or (not (any-pointer: fine)) {
+  .shinchan-cursor {
+    display: none;
+  }
+}
