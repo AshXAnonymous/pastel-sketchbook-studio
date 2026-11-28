@@ -1,5 +1,5 @@
 .shinchan-cursor {
-  --face-width: 45px;
+  --face-width: 50px;
   --face-height: calc(var(--face-width) * 0.75);
   --hover-scale: 1.2;
 

@@ -6,15 +6,24 @@ const CLICK_DURATION = 240;
 
 const faces = {
   default: DEFAULT_FACE,
+  happy: "/cursor/shinchan-happy.webp",
   surprised: "/cursor/surprised.webp",
+  curious: "/cursor/shinchan-curious.webp",
 };
 
-const expressions = new Set([
-  "default", "happy", "surprised",
-]);
-
+const expressions = new Set(Object.keys(faces));
 const disabledSelector = ":disabled, [aria-disabled='true']";
-const surprisedHoverSelector = "button[data-active], button[aria-label='a little doodle']";
+const tagSelector = "#about ul > li, #work article ul > li";
+const optionSelector = "li > button[data-active], header + div > ul > li > button";
+const optionExpressions = ["curious", "surprised", "default", "happy"];
+const curiousSelector = [
+  tagSelector,
+  "#contact form label",
+  "textarea",
+  "input:not([type='checkbox'], [type='radio'], [type='button'], [type='submit'], [type='reset'], [type='file'], [type='range'], [type='color'])",
+  "[contenteditable]:not([contenteditable='false'])",
+  "[role='textbox']",
+].join(", ");
 
 const hoverSelector = [
   "a[href]",
@@ -31,8 +40,7 @@ const hoverSelector = [
   "[role='tab']",
   "[role='textbox']",
   "[data-cursor]",
-  "#about ul > li",
-  "#work article ul > li",
+  tagSelector,
 ].join(", ");
 
 function getExpression(target, hovered) {
@@ -43,13 +51,17 @@ function getExpression(target, hovered) {
   const custom = target.closest("[data-cursor]")?.dataset.cursor;
   if (expressions.has(custom)) return custom;
 
-  if (hovered?.matches(surprisedHoverSelector)) return "surprised";
-
-  if (target.closest("textarea, input:not([type='checkbox'], [type='radio'], [type='button'], [type='submit'], [type='reset'], [type='file'], [type='range'], [type='color']), [contenteditable]:not([contenteditable='false']), [role='textbox']")) {
-    return "curious";
+  if (hovered?.matches(optionSelector)) {
+    const option = hovered.parentElement;
+    const index = Array.from(option.parentElement.children).indexOf(option);
+    return optionExpressions[index % optionExpressions.length];
   }
 
-  return hovered ? "happy" : "default";
+  if (target.closest(curiousSelector)) return "curious";
+  if (hovered?.matches("button[aria-label='a little doodle']")) return "happy";
+  if (hovered?.matches("#work article button")) return "surprised";
+
+  return "default";
 }
 
 export default function ShinchanCursor() {
