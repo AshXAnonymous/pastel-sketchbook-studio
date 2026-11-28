@@ -9,7 +9,7 @@ export const profile = {
   intro:
     "I build fun, thoughtful, and beautiful digital experiences with code, creativity, and lots of curiosity.",
   portrait: "/placeholder-ansh-portrait.png",
-  email: "hello@anshverma.dev",
+  email: "vermaansh30122005@gmail.com",
   location: "somewhere on the internet ☁",
 };
 
@@ -141,10 +141,20 @@ export const services = [
 ];
 
 export const socials = [
-  { label: "Email", value: "hello@anshverma.dev", href: "mailto:hello@anshverma.dev", icon: "✉" },
-  { label: "LinkedIn", value: "/in/anshverma", href: "#", icon: "in" },
-  { label: "GitHub", value: "@anshverma", href: "#", icon: "★" },
-  { label: "Instagram", value: "@ansh.draws", href: "#", icon: "◎" },
+  { label: "Email", value: profile.email, href: `mailto:${profile.email}`, icon: "✉" },
+  {
+    label: "LinkedIn",
+    value: "/in/ansh-verma-9a54893b7",
+    href: "https://www.linkedin.com/in/ansh-verma-9a54893b7",
+    icon: "in",
+  },
+  { label: "GitHub", value: "@AshXAnonymous", href: "https://github.com/AshXAnonymous", icon: "★" },
+  {
+    label: "Instagram",
+    value: "@ansh.verma_30",
+    href: "https://www.instagram.com/ansh.verma_30/",
+    icon: "◎",
+  },
 ];
 
 export const compliments = [

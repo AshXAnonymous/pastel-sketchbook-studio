@@ -1,29 +1,73 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { profile, socials } from "@/data/portfolio";
 import { Cloud, Heart, PokeDoodle, SectionTitle, Star } from "./doodles";
 
-export function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [errors, setErrors] = useState({});
-  const [sent, setSent] = useState(false);
+const emptyForm = { name: "", email: "", message: "" };
 
-  const validate = () => {
+export function Contact() {
+  const [form, setForm] = useState(emptyForm);
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState("idle");
+  const submitting = useRef(false);
+  const sending = status === "sending";
+
+  useEffect(() => {
+    if (status !== "sent") return;
+    const timer = window.setTimeout(() => setStatus("idle"), 4000);
+    return () => window.clearTimeout(timer);
+  }, [status]);
+
+  const validate = (fields) => {
     const e = {};
-    if (!form.name.trim()) e.name = "oops! this field needs a little something ✿";
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email))
+    if (!fields.name) e.name = "oops! this field needs a little something ✿";
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fields.email))
       e.email = "hmm, that email looks a bit shy ☁";
-    if (form.message.trim().length < 10) e.message = "tell me a tiny bit more? (10+ characters) ♡";
+    if (fields.message.length < 10) e.message = "tell me a tiny bit more? (10+ characters) ♡";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const submit = (ev) => {
+  const submit = async (ev) => {
     ev.preventDefault();
-    if (!validate()) return;
-    setSent(true);
-    setForm({ name: "", email: "", message: "" });
-    window.setTimeout(() => setSent(false), 4000);
+    if (submitting.current) return;
+
+    const fields = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      message: form.message.trim(),
+    };
+    if (!validate(fields)) {
+      setStatus("idle");
+      return;
+    }
+
+    const submission = { ...Object.fromEntries(new FormData(ev.currentTarget)), ...fields };
+    submitting.current = true;
+    setStatus("sending");
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${profile.email}`, {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(submission),
+        signal: AbortSignal.timeout(15000),
+      });
+      const result = await response.json();
+
+      if (!response.ok || String(result?.success) !== "true") {
+        const needsActivation = /needs activation/i.test(result?.message ?? "");
+        setStatus(needsActivation ? "inactive" : "error");
+        return;
+      }
+
+      setForm(emptyForm);
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    } finally {
+      submitting.current = false;
+    }
   };
 
   const field = (key, label, isArea = false) => (
@@ -31,13 +75,23 @@ export function Contact() {
       <span className="font-marker text-xl text-ink">{label}</span>
       {isArea ? (
         <textarea
+          name={key}
           rows={4}
+          required
+          disabled={sending}
+          aria-invalid={Boolean(errors[key])}
           value={form[key]}
           onChange={(e) => setForm({ ...form, [key]: e.target.value })}
           className="sketch mt-2 w-full bg-card px-4 py-3 text-ink outline-none focus:border-primary focus:ring-2 focus:ring-ring/40"
         />
       ) : (
         <input
+          name={key}
+          type={key === "email" ? "email" : "text"}
+          autoComplete={key}
+          required
+          disabled={sending}
+          aria-invalid={Boolean(errors[key])}
           value={form[key]}
           onChange={(e) => setForm({ ...form, [key]: e.target.value })}
           className="sketch mt-2 w-full bg-card px-4 py-3 text-ink outline-none focus:border-primary focus:ring-2 focus:ring-ring/40"
@@ -61,6 +115,8 @@ export function Contact() {
 
       <div className="grid gap-8 md:grid-cols-2">
         <motion.form
+          action={`https://formsubmit.co/${profile.email}`}
+          method="post"
           onSubmit={submit}
           noValidate
           initial={{ opacity: 0, y: 24 }}
@@ -68,21 +124,37 @@ export function Contact() {
           viewport={{ once: true, amount: 0.2 }}
           className="paper grain relative space-y-5 bg-card p-7"
         >
+          <input type="hidden" name="_subject" value="New message from your portfolio" />
+          <input name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
           {field("name", "your name ✎")}
           {field("email", "your email ✉")}
           {field("message", "your message ♡", true)}
           <motion.button
             type="submit"
+            disabled={sending}
             whileHover={{ y: -3, rotate: -2, scale: 1.03 }}
             whileTap={{ scale: 0.95 }}
-            className="sketch bg-primary px-6 py-3 font-marker text-xl text-primary-foreground"
+            className="sketch bg-primary px-6 py-3 font-marker text-xl text-primary-foreground disabled:opacity-60"
           >
-            send it! ✦
+            {sending ? "sending…" : "send it! ✦"}
           </motion.button>
 
+          {(status === "inactive" || status === "error") && (
+            <p role="alert" className="font-marker text-lg text-ink">
+              {status === "inactive"
+                ? "the contact form is awaiting activation. "
+                : "i couldn't send your message. please try again or "}
+              <a href={`mailto:${profile.email}`} className="underline">
+                email me directly
+              </a>
+              .
+            </p>
+          )}
+
           <AnimatePresence>
-            {sent && (
+            {status === "sent" && (
               <motion.div
+                role="status"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
@@ -113,7 +185,9 @@ export function Contact() {
                   >
                     <span className="font-display text-lg">{s.icon}</span>
                     <span className="font-marker text-lg">{s.label}</span>
-                    <span className="ml-auto text-sm text-ink-soft">{s.value}</span>
+                    <span className="ml-auto min-w-0 text-right text-sm break-words text-ink-soft">
+                      {s.value}
+                    </span>
                   </motion.a>
                 </li>
               ))}
